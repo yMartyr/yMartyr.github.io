@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[web框架的本质]]></title>
-    <url>%2F2017%2F06%2F17%2Fweb%E6%A1%86%E6%9E%B6%E7%9A%84%E6%9C%AC%E8%B4%A8%2F</url>
-    <content type="text"><![CDATA[1 web是什么我们所说的web通信，是指浏览器与服务器之间的“信息交流”。说到交流总要现有“连接”，而所有的连接都是基于socket的。什么是http协议web通信有两个端：broswer和服务端。服务端负责将数据进行处理并发给浏览器只要是网络通信的，都是基于socket的。浏览web，我们需要用到浏览器。所以本质上b/s ，也是一种c/s。这里浏览器就叫做socket客户端。服务器就叫做socket服务端。 2 访问web的步骤 输入网址。当我们输入网址时发出请求，首先dns服务器会将域名地址转换成对应的ip，而端口默认的是80。 客户端连接,并发送请求（GET）。 12345678910111213141516171819202122232425# 客户端socketsock=socket.socket()sock.connect(('127.0.0.1',8080)#服务端socketsock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)sock.bind(('127.0.0.1',8080)) #web通信默认端口80sock.listen(5)def run(): while True: conn,addr=sock.accept() req=conn.recv(8096) print(req) conn.send(b"HTTP/1.1 200 OK\r\n\r\n") #模拟一个简单的响应头，只包含协议和状态码 conn.send(bytes("aaa",encoding="utf8")) #响应体 conn.close()run() 此时服务端返回的是： 123456789GET / HTTP/1.1Host: 127.0.0.1:8080Connection: keep-aliveCache-Control: max-age=0Upgrade-Insecure-Requests: 1User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8Accept-Encoding: gzip, deflate, brAccept-Language: zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4 PS:请求头和请求体之前是两个“换行”分开的。GET后面的“/”代表的是url。 3 服务端对数据的处理我们可以从浏览发送的请求信息中获取用户想要以“GET”方式访问“/”路径下的文件。而服务端所发送的响应体数据，浏览器就收到什么，就显示什么。如果我们把该响应体数据换成一个静态的网页，是否也能发送成功。1234567891011#新建一个myhtml1.html的文件&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt; &lt;meta charset="UTF-8"&gt; &lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;这是一个测试文件html1&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt; 12345678def func1(): while True: conn,addr=sock.accept() req=conn.recv(8096) conn.send(b"HTTP/1.1 200 OK\r\n\r\n") with open('myhtml1.html','rb') as f: conn.sendall(f.read()) #此时发送的是一个文件 conn.close() 实际上服务端发送的只是一个字符串文件。如果发送一个非html的文件是否也能成功123456789101112#新建一个mytext.txt文件&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt; &lt;meta charset="UTF-8"&gt; &lt;title&gt;Title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;这是一个测试文件txt!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt; 123456789#服务端def func2(): while True: conn,addr=sock.accept() req=conn.recv(8096) conn.send(b"HTTP/1.1 200 OK\r\n\r\n") with open ('mytext.txt', 'rb') as f: conn.sendall(f.read()) conn.close() 服务端发送的响应体，实际上就是一串字符。那为什么客户看到的是有各种效果的网页？这是因为浏览器会将这些字符串渲染之后的效果]]></content>
-      <tags>
-        <tag>web,socket</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[hello]]></title>
     <url>%2F2017%2F06%2F17%2Fhello%2F</url>
     <content type="text"><![CDATA[dsddsd]]></content>
